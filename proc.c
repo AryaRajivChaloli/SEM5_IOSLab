@@ -333,7 +333,7 @@ scheduler(void)
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-	p->prior = 10;
+	//p->priority = 10;
       if(p->state != RUNNABLE)
         continue;
 
@@ -558,8 +558,29 @@ cps(void)
       state = states[p->state];
     else
       state = "???";
-    cprintf("%d %s %s %d", p->pid, state, p->name, p->prior);
+    cprintf("%d %s %s %d", p->pid, state, p->name, p->priority);
     cprintf("\n");
   }
 return 22;
 }
+
+int
+chpr(int pid, int priority)
+{
+struct proc *p;
+if(pid < 0 || (priority > 20 || priority < 0)) return -1;
+acquire(&ptable.lock);
+// TO BE FILLED BY YOU
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->pid == pid){
+	cprintf("YEES");
+      p->priority = priority;
+      break;
+    }
+  }
+release(&ptable.lock);
+return pid;
+
+}
+
+
